@@ -1,6 +1,9 @@
 import pandas as pd
 import numpy as np
 from sklearn.preprocessing import MinMaxScaler
+from sklearn.preprocessing import LabelEncoder
+import torch
+
 
 def load_helpdesk():
     # Load Helpdesk CSV
@@ -65,3 +68,26 @@ def generate_labels(df):
 
 # Apply label generation
 helpdesk_df = generate_labels(helpdesk_df)
+
+
+# Assuming helpdesk_df contains the following columns:
+# 'activity_<one-hot columns>', 'next_event_time', 'remaining_time', 'next_activity'
+# Convert the columns to PyTorch tensors
+
+# Features (activity sequences in one-hot encoded format)
+X = torch.tensor(helpdesk_df_onehot.filter(like='Activity_').values, dtype=torch.float32)
+
+# Initialize LabelEncoder
+label_encoder = LabelEncoder()
+
+# Fit and transform the next_activity column
+helpdesk_df['next_activity_encoded'] = label_encoder.fit_transform(helpdesk_df['next_activity'])
+
+# Now you can convert the encoded labels into tensors
+y_activity = torch.tensor(helpdesk_df['next_activity_encoded'].values, dtype=torch.long)
+
+# Next event time (target for regression)
+y_next_time = torch.tensor(helpdesk_df['next_event_time'].values, dtype=torch.float32)
+
+# Remaining time (target for regression)
+y_remaining_time = torch.tensor(helpdesk_df['remaining_time'].values, dtype=torch.float32)

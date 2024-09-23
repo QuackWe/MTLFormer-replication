@@ -2,11 +2,12 @@ from MTLFormer import MTLFormer
 from train import train_model
 from eval import evaluate_model
 from torch import optim
+from dataloader import train_loader, val_loader
 
-
+# TODO: Fix embed_size having to be same as num_classes atm, then check paper for hyperparams
 # Model hyperparameters
-embed_size = 128
-heads = 8
+embed_size = 14
+heads = 7
 dropout = 0.3
 num_classes = 14  # For next activity prediction
 
@@ -19,12 +20,14 @@ optimizer = optim.Adam(model.parameters(), lr=0.002)
 # Define loss weights (tuning these may help balance task performance)
 weights = [0.6, 0.2, 0.2]  # Can be tuned
 
-# Dataloaders (to be defined based on your dataset)
-# train_loader = DataLoader(...)
-# val_loader = DataLoader(...)
 
+# TODO: Make the trianing actually go through epochs, currently just runs once
 # Train the model
-train_model(model, train_loader, optimizer, weights, num_epochs=100)
+epoch, num_epochs, total_loss = train_model(model, train_loader, optimizer, weights, num_epochs=100)
+print(f"Epoch [{epoch + 1}/{num_epochs}], Loss: {total_loss:.4f}")
 
 # Evaluate the model
-evaluate_model(model, val_loader)
+accuracy, avg_time_mae, avg_remaining_mae = evaluate_model(model, val_loader)
+print(f'Accuracy for next activity: {accuracy:.4f}')
+print(f'MAE for next event time: {avg_time_mae:.4f}')
+print(f'MAE for remaining time: {avg_remaining_mae:.4f}')
