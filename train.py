@@ -1,6 +1,7 @@
 from loss import multitask_loss
 import torch
 
+
 # Training loop
 def train_model(model, dataloader, optimizer, weights, num_epochs=100):
     model.train()
@@ -32,4 +33,4 @@ def train_model(model, dataloader, optimizer, weights, num_epochs=100):
             total_loss += loss.item()
 
         print(f"Epoch [{epoch+1}/{num_epochs}], Loss: {total_loss:.4f}")
-        return epoch, num_epochs, total_loss
+    return epoch, num_epochs, total_loss

@@ -20,8 +20,6 @@ optimizer = optim.Adam(model.parameters(), lr=0.002)
 # Define loss weights (tuning these may help balance task performance)
 weights = [0.6, 0.2, 0.2]  # Can be tuned
 
-
-# TODO: Make the trianing actually go through epochs, currently just runs once
 # Train the model
 epoch, num_epochs, total_loss = train_model(model, train_loader, optimizer, weights, num_epochs=100)
 print(f"Epoch [{epoch + 1}/{num_epochs}], Loss: {total_loss:.4f}")
